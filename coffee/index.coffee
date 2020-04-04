@@ -74,12 +74,19 @@ updateP = ->
   $('tr#line_total').find('td').eq(1).html total.toLocaleString()
   $('tr.count').each ->
     id = $(@).find('th').eq(0).html()
-    if window.times[id]?
+    if window.times[id]? and window.times[id] > 0
       $(@).find('td').eq(1).html(window.times[id].toLocaleString())
-      $(@).find('td').eq(2).html(sprintf('%.2f', window.times[id] / total * 100)+'%')
+      $(@).find('td').eq(2).html('').append(
+        $('<span>').addClass('fraction').append(
+          $('<span>').addClass('fraction_n').html(1)
+        ).append(
+          $('<span>').addClass('fraction_d').html(sprintf('%d', total / window.times[id]))
+        )
+      )
+      $(@).find('td').eq(3).html(sprintf('%.2f', window.times[id] / total * 100)+'%')
 
 updateLine = (count, history)->
-  $('tr#line_'+count+' td').eq(3).html(
+  $('tr#line_'+count+' td').eq(4).html(
     if count is 'total' or count < window.historyMin
       ''
     else
@@ -106,6 +113,9 @@ addLine = (count, title = null)->
   )
   .append(
     $('<td>').addClass('right')
+  )
+  .append(
+    $('<td>').addClass('center')
   )
   .append(
     $('<td>').addClass('right')

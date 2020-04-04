@@ -100,15 +100,16 @@ updateP = function() {
   return $('tr.count').each(function() {
     var id;
     id = $(this).find('th').eq(0).html();
-    if (window.times[id] != null) {
+    if ((window.times[id] != null) && window.times[id] > 0) {
       $(this).find('td').eq(1).html(window.times[id].toLocaleString());
-      return $(this).find('td').eq(2).html(sprintf('%.2f', window.times[id] / total * 100) + '%');
+      $(this).find('td').eq(2).html('').append($('<span>').addClass('fraction').append($('<span>').addClass('fraction_n').html(1)).append($('<span>').addClass('fraction_d').html(sprintf('%d', total / window.times[id]))));
+      return $(this).find('td').eq(3).html(sprintf('%.2f', window.times[id] / total * 100) + '%');
     }
   });
 };
 
 updateLine = function(count, history) {
-  return $('tr#line_' + count + ' td').eq(3).html(count === 'total' || count < window.historyMin ? '' : (history.map(function(v) {
+  return $('tr#line_' + count + ' td').eq(4).html(count === 'total' || count < window.historyMin ? '' : (history.map(function(v) {
     if (v === '▲' || v === '▼') {
       return v;
     } else {
@@ -127,7 +128,7 @@ addLine = function(count, title) {
     return;
   }
   title = title === null ? count : title;
-  tr = $('<tr>').addClass(count === 'total' ? '' : 'count').attr('id', id).append($('<th>').addClass('right').html(title)).append($('<td>').addClass('right').html(count === 'total' ? '-' : count === 0 ? 0 : (Math.pow(2, count - 1)).toLocaleString())).append($('<td>').addClass('right')).append($('<td>').addClass('right')).append($('<td>'));
+  tr = $('<tr>').addClass(count === 'total' ? '' : 'count').attr('id', id).append($('<th>').addClass('right').html(title)).append($('<td>').addClass('right').html(count === 'total' ? '-' : count === 0 ? 0 : (Math.pow(2, count - 1)).toLocaleString())).append($('<td>').addClass('right')).append($('<td>').addClass('center')).append($('<td>').addClass('right')).append($('<td>'));
   $('tbody').append(tr);
   return window.times[count] = 0;
 };

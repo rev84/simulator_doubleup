@@ -1,3 +1,15 @@
 .right {
   text-align: right;
 }
+.fraction{
+  display: inline;
+  vertical-align: middle;
+  text-align: center;
+}
+.fraction_n,.fraction_d{
+  display: block;
+  text-align: center;
+}
+.fraction_n{
+  border-bottom: 1px solid #333;
+}
