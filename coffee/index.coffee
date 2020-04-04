@@ -13,6 +13,7 @@ init = ->
 
 start = ->
   window.timerContinue = !window.timerContinue
+  $('#start').html(if window.timerContinue then 'ストップ' else 'スタート')
   go()
 
 go = ->
@@ -26,6 +27,7 @@ go = ->
   while true
     targetCard = deck.pop()
     decide = decideUpper baseCard
+    history.push(if decide then '▲' else '▼')
     res = result(baseCard, targetCard, decide)
     history.push(targetCard)
     if res is 'draw'
@@ -43,6 +45,7 @@ go = ->
   window.times[count]++
   updateLine(count, history)
   updateP()
+  updateAverage()
 
   setTimeout go, 1
 
@@ -53,13 +56,18 @@ totalTimes = ->
   t
 
 decideUpper = (baseCard)->
-  c2p(baseCard) <= 6
+  c2p(baseCard) <= 5
 
 result = (baseCard, targetCard, decide)->
   return 'draw' if c2p(baseCard) is c2p(targetCard)
   (c2p(baseCard) < c2p(targetCard) and decide) or (c2p(baseCard) > c2p(targetCard) and not decide)
 
-
+updateAverage = ->
+  total = totalTimes()
+  avg = 0
+  $('tr.count').each ->
+    total += Number($(@).find('td').eq(1).html().replace(/\,/g, '')) * ((Number($(@).find('td').eq(2).html().replace(/\,/g, '')) / total))
+  $('tr#line_total').find('td').eq(0).html Math.floor(total).toLocaleString()
 updateP = ->
   total = totalTimes()
   $('tr#line_total').find('td').eq(1).html total.toLocaleString()
@@ -71,7 +79,15 @@ updateP = ->
 
 updateLine = (count, history)->
   $('tr#line_'+count+' td').eq(3).html(
-    if count is 'total' or count < window.historyMin then '' else history.map((v)-> '<img class="card" src="'+c2img(v)+'">').join(',')
+    if count is 'total' or count < window.historyMin
+      ''
+    else
+      (history.map((v)->
+        if v is '▲' or v is '▼'
+          v
+        else
+          '<img class="card" src="'+c2img(v)+'">')
+      ).join('')
   )
 
 addLine = (count, title = null)->
@@ -107,7 +123,7 @@ c2p = (c)->
   else
     c % 13
 c2img = (c)->
-  return './img/jk.png' if 52 <= c
+  return './img/jk0.png' if 52 <= c
   nums = [2,3,4,5,6,7,8,9,10,11,12,13,1]
   img = './img/'
   img += switch Math.floor(c/13)
