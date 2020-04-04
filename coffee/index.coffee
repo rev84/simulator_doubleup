@@ -66,8 +66,9 @@ updateAverage = ->
   total = totalTimes()
   avg = 0
   $('tr.count').each ->
-    total += Number($(@).find('td').eq(1).html().replace(/\,/g, '')) * ((Number($(@).find('td').eq(2).html().replace(/\,/g, '')) / total))
-  $('tr#line_total').find('td').eq(0).html Math.floor(total).toLocaleString()
+    avg += Number($(@).find('td').eq(0).html().replace(/\,/g, '')) * ((Number($(@).find('td').eq(1).html().replace(/\,/g, '')) / total))
+  $('tr#line_total').find('td').eq(0).html Math.floor(avg).toLocaleString()
+
 updateP = ->
   total = totalTimes()
   $('tr#line_total').find('td').eq(1).html total.toLocaleString()

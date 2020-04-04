@@ -88,9 +88,9 @@ updateAverage = function() {
   total = totalTimes();
   avg = 0;
   $('tr.count').each(function() {
-    return total += Number($(this).find('td').eq(1).html().replace(/\,/g, '')) * (Number($(this).find('td').eq(2).html().replace(/\,/g, '')) / total);
+    return avg += Number($(this).find('td').eq(0).html().replace(/\,/g, '')) * (Number($(this).find('td').eq(1).html().replace(/\,/g, '')) / total);
   });
-  return $('tr#line_total').find('td').eq(0).html(Math.floor(total).toLocaleString());
+  return $('tr#line_total').find('td').eq(0).html(Math.floor(avg).toLocaleString());
 };
 
 updateP = function() {
